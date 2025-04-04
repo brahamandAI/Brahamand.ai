@@ -1,0 +1,89 @@
+{
+  "roadmap": [
+    {
+      "heading": "Define the problem",
+      "date": "25 APR, 2024",
+      "isCheck": true,
+      "isLoading": false,
+      "isBorader": true,
+      "title": "Tacotron and Tacotron",
+      "desc": "It seems like your question is quite broad, and I'm not sure which specific problem or context you're referring to.",
+      "list": [
+        {
+          "desc": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+        },
+        {
+          "desc": "These models often use recurrent neural networks (RNNs), LSTM networks, or transformer architectures."
+        }
+      ]
+    },
+    {
+      "heading": "Train the chatbot",
+      "date": "25 APR, 2024",
+      "isCheck": true,
+      "isLoading": false,
+      "isBorader": true,
+      "title": "Choose a Platform",
+      "desc": "Clearly define the purpose of your chatbot. Determine if it will provide.",
+      "list": [
+        {
+          "desc": "Around 2013, the use of deep learning, especially transformer architectures"
+        }
+      ]
+    },
+    {
+      "heading": "Build the app",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": true,
+      "isBorader": true,
+      "title": "",
+      "desc": "Research similar apps to understand market trends and identify opportunities."
+    },
+    {
+      "heading": "Launch the app",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": true,
+      "isBorader": true,
+      "title": "",
+      "desc": "Based on user feedback and insights, plan regular updates to enhance features, fix bugs, and introduce new functionalities."
+    },
+    {
+      "heading": "Update the app",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": true,
+      "isBorader": true,
+      "title": "",
+      "desc": "Bug Fixes Address critical bugs and issues reported by users"
+    },
+    {
+      "heading": "Train the chatbot",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": false,
+      "isBorader": true,
+      "title": "",
+      "desc": "If using machine learning, choose or build a suitable natural language processing (NLP) model. Popular choices."
+    },
+    {
+      "heading": "Collect and Label",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": false,
+      "isBorader": true,
+      "title": "",
+      "desc": "User Inputs Gather a diverse set of user inputs that your chatbot is likely to encounter."
+    },
+    {
+      "heading": "Add more features",
+      "date": "25 APR, 2024",
+      "isCheck": false,
+      "isLoading": false,
+      "isBorader": false,
+      "title": "",
+      "desc": "Enable the chatbot to handle and respond to multimedia inputs, such as images, videos, or audio clips."
+    }
+  ]
+}

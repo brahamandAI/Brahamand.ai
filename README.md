@@ -1,0 +1,1 @@
+# This project code was created by Ayan Khan and is licensed and reserved under his name with all legal documentation. Sharing it without permission may result in legal action.

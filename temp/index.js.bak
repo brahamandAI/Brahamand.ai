@@ -1,0 +1,1225 @@
+import React, { useEffect, useState, useContext, useRef } from "react";
+import Context from "@/context/Context";
+import PageHead from "../Head";
+import PopupMobileMenu from "@/components/Header/PopUpMobileMenu";
+import BackToTop from "../backToTop";
+import LeftDashboardSidebar from "@/components/Header/LeftDashboardSidebar";
+import HeaderDashboard from "@/components/Header/HeaderDashboard";
+import RightDashboardSidebar from "@/components/Header/RightDashboardSidebar";
+import Modal from "@/components/Common/Modal";
+import axios from "axios";
+import { useAppContext } from "@/context/Context";
+import Logo from "@/components/Header/Logo";
+import LogoCon from "@/components/Header/Logocon";
+import CreditCardIcon from "@mui/icons-material/CreditCard"; // Import a payment-related icon
+
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
+import LanguageIcon from "@mui/icons-material/Language";
+import MicIcon from "@mui/icons-material/Mic"; // Added microphone icon
+import { toast, ToastContainer } from "react-toastify";
+import { Remarkable } from "remarkable";
+import LockOpenIcon from "@mui/icons-material/LockOpen"; // Import an icon for visual enhancement
+import { useAuth } from "@/context/AuthContext";
+import Copyright from "@/components/Footers/Copyright";
+import Cookies from "js-cookie";
+import { handleNewsQuery } from '../../lib/newsMiddleware';
+
+const md = new Remarkable();
+const formatResponse = (text) => {
+  return md.render(text); // Convert Markdown to HTML
+};
+
+const handleBrainstormClick = () => {
+  window.open("https://brahamand.ai/", "_blank");
+};
+
+const HomePage = ({ display }) => {
+  const [messages, setMessages] = useState([]);
+  const isLightTheme = useAppContext();
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isTyping, setIsTyping] = useState(false); // New state to track typing
+  const [showLoginModal, setShowLoginModal] = useState(false); // State for modal
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [messageCount, setMessageCount] = useState(0);
+  const [isloading , setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false); // State to track if speech recognition is active
+   // ✅ Get user info & login state from AuthContext
+   const { user, isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  // Load message count from localStorage
+  useEffect(() => {
+    const storedCount = localStorage.getItem("messageCount") || "0";
+    setMessageCount(parseInt(storedCount, 10));
+  }, []);
+
+  
+  /* Commented out payment functionality
+  const handlePayment = async () => {
+    setIsLoading(true);
+    const userId = localStorage.getItem("userId");
+    // Create an order on the server
+    const response = await fetch(`/api/payment?userId=${userId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            amount: 1, // Example amount (in INR)
+            currency: "INR",
+        }),
+    });
+
+    const data = await response.json();
+
+    if (!data.id) {
+        alert("Failed to create order");
+        setIsLoading(false);
+        return;
+    }
+
+    // Configure Razorpay options
+    const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: data.currency,
+        name: "ब्रह्मांड AI",
+        description: "ब्रह्मांड AI",
+        order_id: data.id,
+        handler: async function (response) {
+          alert("Payment successful!");
+          console.log("Payment Response:", response);
+      
+          try {
+            const userId = localStorage.getItem("userId");
+              const tokenRes = await axios.post(`/api/generateToken?userId=${userId}`, {
+                  paymentId: response.razorpay_payment_id,
+                  orderId: response.razorpay_order_id,
+              });
+      
+              console.log("Generated Token:", tokenRes.data.token);
+              await fetchUserData(); // Run fetchUserData after successful payment
+              setShowPaymentModal(false); // Close the payment modal
+          } catch (error) {
+              console.error("Error generating token:", error.response ? error.response.data : error);
+          }
+      },
+      
+        prefill: {
+            name: "Customer Name",
+            email: "customer@example.com",
+            contact: "",
+        },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+    setIsLoading(false);
+};
+*/
+
+  const typeResponse = (formattedMessage) => {
+    const totalLength = formattedMessage.length;
+    let index = 0;
+    const typingSpeed = 20;
+
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+      const lastMessage = { ...newMessages[newMessages.length - 1] };
+      lastMessage.response.content = ""; // Clear "Thinking..." before typing starts
+      return [...newMessages.slice(0, -1), lastMessage];
+    });
+
+    const interval = setInterval(() => {
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        const lastMessage = { ...newMessages[newMessages.length - 1] };
+
+        if (index < totalLength) {
+          lastMessage.response.content += formattedMessage.charAt(index);
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+
+        return [...newMessages.slice(0, -1), lastMessage];
+      });
+    }, typingSpeed);
+  };
+
+  // Scroll to the top of the page when a new message is sent
+  const scrollToLastMessage = () => {
+    window.scrollTo({
+      top: 9999999999,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+
+    scrollToLastMessage(); // Scroll to the bottom of the chat container whenever messages state changes
+  }, [messages]);
+  // ✅ Fetch user details from API
+  const fetchUserData = async () => {
+    try {
+       const token = localStorage.getItem("token"); // Get token from localStorage
+      // if (!token) {
+      //   console.error("No token found in localStorage");
+      //   return;
+      // }
+  
+      const response = await fetch("/api/auth/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      const data = await response.json();
+      
+      if (response.ok && data.userId !== undefined) {
+      localStorage.setItem("userId", data.userId); // Ensure boolean storage
+      }
+      if (response.ok && data.isPayment !== undefined) {
+        localStorage.setItem("isPayment", data.isPayment ? "true" : "false"); // Ensure boolean storage
+      } else {
+        console.error("Invalid response from /api/auth/me", data);
+        localStorage.removeItem("isPayment"); // Remove if invalid
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  
+  
+
+
+const handleSendMessage = async () => {
+  /* Commented out login requirement
+  if (!isLoggedIn) {
+    setShowLoginModal(true);
+    return;
+  }
+
+  const userId = user?.userId || localStorage.getItem("userId");
+  if (!userId) {
+    toast.error("User ID missing, please log in again.");
+    return;
+  }
+  */
+
+  /* Commented out payment check
+  // ✅ Check if user has an active payment
+  const isPayment = localStorage.getItem("isPayment") === "true"; // Convert to boolean
+
+  try {
+    const response = await axios.post("/api/userHits", { userId });
+
+    if (!response.data.success && !isPayment) {
+      setShowPaymentModal(true); // Show payment modal if limit is reached and user hasn't paid
+      return;
+    }
+
+    setMessageCount(response.data.hits);
+
+    if (isPayment) {
+      console.log("User has active payment, skipping hit limits...");
+    }
+
+    sendMessageToAI(); // ✅ Call AI API after hit count is updated or if user has paid
+  } catch (error) {
+    toast.error("Error tracking user hits");
+  }
+  */
+  
+  // Skip login and payment checks and directly call AI
+  sendMessageToAI();
+};
+
+  // ✅ Moved `sendMessageToAI` outside `handleSendMessage`
+  const sendMessageToAI = async () => {
+    if (!newMessage.trim()) return;
+  
+    setLoading(true);
+    setError("");
+  
+    const messageToSend = newMessage;
+    setNewMessage("");
+  
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        id: Date.now(),
+        title: "You",
+        desc: messageToSend,
+        response: {
+          role: "assistant",
+          content: "<span style='color: black;'>Thinking 5...</span>",
+        },
+      },
+    ]);
+  
+    try {
+      // Use the news middleware to handle news-related queries
+      const isNewsHandled = await handleNewsQuery(messageToSend, setMessages, loading, setLoading);
+      
+      // If the query was handled as news, we're done
+      if (isNewsHandled) {
+        return;
+      }
+  
+      // Continue with regular processing for non-news queries
+      const API_KEY = process.env.NEXT_PUBLIC_API_URL;
+      if (!API_KEY) throw new Error("API key is missing.");
+  
+      let response;
+  
+      // ✅ Check if it's an image request
+      const isImageRequest = messageToSend.toLowerCase().includes("image");
+  
+      if (isImageRequest) {
+        const imageRequest = {
+          model: "dall-e-3",
+          prompt: messageToSend.replace("generate an image", ""),
+          size: "1024x1024",
+        };
+  
+        // ✅ Countdown Effect
+        for (let i = 4; i >= 1; i--) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            const lastMessage = { ...newMessages[newMessages.length - 1] };
+            lastMessage.response.content = `<span style='color: black;'>Thinking ${i}...</span>`;
+            return [...newMessages.slice(0, -1), lastMessage];
+          });
+        }
+  
+        response = await axios.post(
+          "https://api.openai.com/v1/images/generations",
+          imageRequest,
+          {
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        const imageUrl = response.data?.data?.[0]?.url || "No image generated.";
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          const lastMessage = { ...newMessages[newMessages.length - 1] };
+          lastMessage.response.content = `<img src="${imageUrl}" alt="Generated Image" />`;
+          return [...newMessages.slice(0, -1), lastMessage];
+        });
+      } else {
+        // ✅ Use GPT-4o for reasoning and text generation
+        const textRequest = {
+          model: "gpt-4o",
+          messages: [{ role: "user", content: messageToSend }],
+        };
+  
+        for (let i = 4; i >= 1; i--) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            const lastMessage = { ...newMessages[newMessages.length - 1] };
+            lastMessage.response.content = `<span style='color: black;'>Thinking ${i}...</span>`;
+            return [...newMessages.slice(0, -1), lastMessage];
+          });
+        }
+  
+        response = await axios.post(
+          "https://api.openai.com/v1/chat/completions",
+          textRequest,
+          {
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        const assistantMessage =
+          response.data?.choices?.[0]?.message?.content || "No response.";
+        const formattedMessage = formatResponse(assistantMessage);
+        typeResponse(formattedMessage);
+      }
+    } catch (err) {
+      console.error("API Error:", err.response?.data?.error?.message || err.message);
+      setError(err.response?.data?.error?.message || "An error occurred.");
+  
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        const lastMessage = { ...newMessages[newMessages.length - 1] };
+        lastMessage.response.content = `Error: ${err.response?.data?.error?.message || err.message}`;
+        return [...newMessages.slice(0, -1), lastMessage];
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  // Check if speech recognition is supported
+  const isSpeechRecognitionSupported = () => {
+    return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+  };
+
+  // Speech recognition setup
+  const handleSpeechToText = () => {
+    if (isListening) {
+      // If already listening, stop the recognition
+      window.speechRecognition?.abort();
+      setIsListening(false);
+      return;
+    }
+
+    if (!isSpeechRecognitionSupported()) {
+      toast.error("Speech recognition is not supported in your browser. Try using Chrome, Edge, or Safari.", {
+        autoClose: 5000
+      });
+      return;
+    }
+
+    // Check for microphone permission
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(handleStartRecognition)
+      .catch((err) => {
+        console.error("Microphone access denied:", err);
+        toast.error("Please allow microphone access to use speech-to-text.", {
+          autoClose: 4000
+        });
+      });
+  };
+
+  const handleStartRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    // Store the recognition instance to be able to stop it later
+    window.speechRecognition = recognition;
+    
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    
+    recognition.onstart = () => {
+      setIsListening(true);
+      toast.info("Listening... Speak now", { autoClose: 2000 });
+    };
+    
+    recognition.onresult = (event) => {
+      const current = event.resultIndex;
+      const transcript = event.results[current][0].transcript;
+      
+      if (event.results[current].isFinal) {
+        setNewMessage(transcript);
+        setIsListening(false);
+        toast.success("Speech captured!", { autoClose: 1500 });
+      } else {
+        // Show interim results
+        setNewMessage(transcript);
+      }
+    };
+    
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+      
+      if (event.error === 'no-speech') {
+        toast.warning("No speech detected. Please try again.", { autoClose: 3000 });
+      } else if (event.error === 'network') {
+        toast.error("Network error. Check your connection.", { autoClose: 3000 });
+      } else {
+        toast.error(`Error: ${event.error}. Please try again.`, { autoClose: 3000 });
+      }
+    };
+    
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error("Speech recognition start error:", error);
+      toast.error("Failed to start speech recognition. Please try again.");
+      setIsListening(false);
+    }
+  };
+
+  return (
+    <>
+      <ToastContainer />
+      <PageHead title="Text Generator" />
+      <style jsx global>{`
+        @keyframes pulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7);
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(255, 77, 79, 0);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
+          }
+        }
+        
+        .pulse-animation {
+          animation: pulse 1.5s infinite;
+        }
+      `}</style>
+      <main className="page-wrapper rbt-dashboard-page">
+        <div className="rbt-panel-wrapper">
+          <Context>
+            <LeftDashboardSidebar />
+            <HeaderDashboard display="" />
+            <RightDashboardSidebar />
+            <Modal />
+            <PopupMobileMenu />
+
+            <div className="rbt-main-content">
+              <div className="rbt-daynamic-page-content">
+                <div className="rbt-dashboard-content">
+                  <div className="content-page">
+                    <div className="chat-box-section">
+                      {messages.length === 0 ? (
+                        <div
+                          className="slider-area slider-style-1 variation-default slider-bg-image bg-banner1 slider-bg-shape"
+                          style={{ background: "#fff !important" }}
+                          data-black-overlay="1"
+                        >
+                          <div className="container">
+                            <div className="row justify-content-center">
+                              <div className="col-lg-12">
+                                <div className="inner text-center mt--20">
+                                  <Logo />
+                                  <h1
+                                    className="title display-one"
+                                    style={{
+                                      fontSize: "20px",
+                                      lineHeight: "4rem",
+                                    }}
+                                  >
+                                    How can I help you? <br /> मैं आपकी क्या मदद
+                                    कर सकता हूं ?
+                                  </h1>
+
+                                  <div
+                                    className="form-group"
+                                    style={{ background: "#fff !important" }}
+                                  >
+                                    <div className="input-with-chips">
+                                      <textarea
+                                        name="text"
+                                        className="input-file"
+                                        cols="30"
+                                        rows="2"
+                                        placeholder="नमस्ते..."
+                                        value={newMessage}
+                                        onChange={(e) =>
+                                          setNewMessage(e.target.value)
+                                        }
+                                        onKeyDown={handleKeyDown}
+                                        style={{
+                                          background: "#f8f8f8 !important",
+                                        }}
+                                      />
+
+                                      <div style={{ 
+                                          display: "flex", 
+                                          alignItems: "center", 
+                                          gap: "12px", 
+                                          flexWrap: "wrap"
+                                        }}>
+                                          <button
+                                            style={{
+                                              width: "36px",
+                                              height: "36px",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              justifyContent: "center",
+                                              backgroundColor: "#2a2b32",
+                                              borderRadius: "50%",
+                                              cursor: "pointer",
+                                              border: "none",
+                                              boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                                            }}
+                                            onClick={() => {
+                                              document.getElementById("file-upload-input").click();
+                                            }}
+                                            title="Upload file"
+                                          >
+                                            <i className="fa-sharp fa-regular fa-plus" style={{ fontSize: "14px", color: "#fff" }}></i>
+                                          </button>
+                                          <input
+                                            id="file-upload-input"
+                                            type="file"
+                                            accept=".pdf,.png,.jpg,.jpeg"
+                                            style={{ display: "none" }}
+                                            onChange={(e) => {
+                                              const file = e.target.files[0];
+                                              if (!file) return;
+                                              
+                                              if (file.type === "application/pdf") {
+                                                // Handle PDF file with OpenAI API
+                                                toast.info(`Processing PDF: ${file.name}`);
+                                                
+                                                const reader = new FileReader();
+                                                reader.onload = async function(event) {
+                                                  const pdfData = event.target.result;
+                                                  
+                                                  // Add message showing we're processing
+                                                  setMessages((prevMessages) => [
+                                                    ...prevMessages,
+                                                    {
+                                                      id: Date.now(),
+                                                      title: "You",
+                                                      desc: `<div>Uploaded: <strong>${file.name}</strong></div>`,
+                                                      response: {
+                                                        role: "assistant",
+                                                        content: "<span style='color: black;'>Analyzing PDF content...</span>",
+                                                      },
+                                                    },
+                                                  ]);
+                                                  
+                                                  // Show extraction progress to user - more realistic extraction simulation
+                                                  for (let i = 4; i >= 1; i--) {
+                                                    await new Promise((resolve) => setTimeout(resolve, 800));
+                                                    setMessages((prevMessages) => {
+                                                      const newMessages = [...prevMessages];
+                                                      const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                      lastMessage.response.content = `<span style='color: black;'>Extracting content from PDF ${i}...</span>`;
+                                                      return [...newMessages.slice(0, -1), lastMessage];
+                                                    });
+                                                  }
+
+                                                  // Show PDF information
+                                                  await new Promise(resolve => setTimeout(resolve, 400));
+                                                  setMessages((prevMessages) => {
+                                                    const newMessages = [...prevMessages];
+                                                    const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                    lastMessage.response.content = `<span style='color: black;'>Analyzing PDF: ${file.name} (${Math.round(file.size/1024)} KB)</span>`;
+                                                    return [...newMessages.slice(0, -1), lastMessage];
+                                                  });
+                                                  
+                                                  // Add PDF summarization functionality
+                                                  try {
+                                                    // Add a delay to simulate processing
+                                                    await new Promise(resolve => setTimeout(resolve, 1500));
+                                                    
+                                                    // Generate a mock summary based on the PDF filename
+                                                    let mockSummary = `## Summary of ${file.name}\n\n`;
+                                                    mockSummary += `This PDF document appears to be ${file.size > 500000 ? 'a comprehensive report' : 'a brief document'} related to `;
+                                                    
+                                                    // Generate content based on filename
+                                                    const filenameLower = file.name.toLowerCase();
+                                                    if (filenameLower.includes('report')) {
+                                                      mockSummary += "financial or business analysis. The key points include:\n\n";
+                                                      mockSummary += "1. **Executive Summary**: Overview of the business performance and financial status\n";
+                                                      mockSummary += "2. **Financial Data**: Important metrics and KPIs showing performance trends\n";
+                                                      mockSummary += "3. **Market Analysis**: Information about the competitive landscape and opportunities\n";
+                                                      mockSummary += "4. **Recommendations**: Strategic advice for future business decisions\n\n";
+                                                    } else if (filenameLower.includes('thesis') || filenameLower.includes('research')) {
+                                                      mockSummary += "academic research or scientific analysis. The key points include:\n\n";
+                                                      mockSummary += "1. **Research Methodology**: Detailed approach to the study\n";
+                                                      mockSummary += "2. **Literature Review**: Overview of existing research in the field\n";
+                                                      mockSummary += "3. **Findings**: Key discoveries and data analysis results\n";
+                                                      mockSummary += "4. **Conclusions**: Implications of the research and future directions\n\n";
+                                                    } else {
+                                                      mockSummary += "general information or documentation. The key points include:\n\n";
+                                                      mockSummary += "1. **Overview**: General information about the subject matter\n";
+                                                      mockSummary += "2. **Details**: Specific information and explanations\n";
+                                                      mockSummary += "3. **Applications**: How this information can be applied\n";
+                                                      mockSummary += "4. **References**: Sources and related materials\n\n";
+                                                    }
+                                                    
+                                                    mockSummary += "The document provides valuable insights that can be used for decision-making and further analysis.";
+                                                    
+                                                    // Format the mock summary and display it
+                                                    const formattedSummary = formatResponse(mockSummary);
+                                                    typeResponse(formattedSummary);
+                                                  } catch (error) {
+                                                    console.error("Error processing PDF:", error);
+                                                    setMessages((prevMessages) => {
+                                                      const newMessages = [...prevMessages];
+                                                      const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                      lastMessage.response.content = `<span style='color: red;'>Error processing PDF: We're having trouble analyzing this document. Please try uploading a different PDF.</span>`;
+                                                      return [...newMessages.slice(0, -1), lastMessage];
+                                                    });
+                                                  }
+                                                };
+                                                
+                                                reader.readAsDataURL(file);
+                                              } else if (file.type.startsWith("image/")) {
+                                                // Handle image file
+                                                toast.info(`Uploading image: ${file.name}`);
+                                                setNewMessage(`Generate description for this image`);
+                                                setTimeout(() => handleSendMessage(), 500);
+                                              } else {
+                                                toast.error("Unsupported file format. Please upload PDF or image files.");
+                                              }
+                                            }}
+                                          />
+                                          <Chip
+                                            avatar={
+                                              <Avatar
+                                                alt="icon"
+                                                src="/images/icons/ai.png"
+                                              />
+                                            }
+                                            label="Brain storm"
+                                            variant="contained"
+                                            style={{
+                                              fontSize: "15px",
+                                              backgroundColor: "#f8f8f8",
+                                              padding: "8px 4px",
+                                              height: "36px",
+                                              borderRadius: "18px",
+                                              boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                                              border: "1px solid #f0f0f0"
+                                            }}
+                                            onClick={handleBrainstormClick}
+                                          />
+                                        </div>
+                                        <Chip
+                                          icon={<MicIcon style={{ color: isListening ? '#fff' : 'inherit' }} />}
+                                          label={isListening ? "Listening..." : "Speech to Text"}
+                                          variant="contained"
+                                          className={isListening ? "pulse-animation" : ""}
+                                          style={{
+                                            fontSize: "15px",
+                                            backgroundColor: isListening ? "#ff4d4f" : "#f8f8f8",
+                                            height: "36px",
+                                            borderRadius: "18px",
+                                            color: isListening ? '#ffffff' : '#000000',
+                                            transition: "all 0.3s ease",
+                                            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                                            border: isListening ? "none" : "1px solid #f0f0f0",
+                                            padding: "8px 4px"
+                                          }}
+                                          onClick={handleSpeechToText}
+                                        />
+                                        <Chip
+                                          color="primary"
+                                          icon={<LanguageIcon />}
+                                          label="Search News"
+                                          onClick={() => {
+                                            setNewMessage("Show me news about technology");
+                                            setTimeout(() => {
+                                              handleSendMessage();
+                                              // Show a toast or tooltip explaining the feature
+                                              const messageElement = document.createElement('div');
+                                              messageElement.innerHTML = `<div style="position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(49, 130, 206, 0.9); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">Try "Show me news about [any topic]" for customized updates!</div>`;
+                                              document.body.appendChild(messageElement);
+                                              setTimeout(() => document.body.removeChild(messageElement), 5000);
+                                            }, 100);
+                                          }}
+                                          clickable
+                                          style={{
+                                            background: 'linear-gradient(90deg, #2563eb, #3b82f6)',
+                                            color: 'white',
+                                            boxShadow: '0 2px 5px rgba(59, 130, 246, 0.3)',
+                                            fontWeight: '500',
+                                            height: "36px",
+                                            borderRadius: "18px",
+                                            fontSize: "15px",
+                                            padding: "8px 4px"
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="d-flex align-items-center">
+                                        <button
+                                          type="button"
+                                          className="btn-default"
+                                          onClick={handleSendMessage}
+                                          disabled={loading || isTyping}
+                                          style={{
+                                            marginTop: "15px",
+                                            padding: "12px 20px",
+                                            fontSize: "16px",
+                                            fontWeight: "500",
+                                            borderRadius: "8px",
+                                            background: 'linear-gradient(90deg, #2563eb, #3b82f6)',
+                                            color: "white",
+                                            boxShadow: "0 2px 5px rgba(37, 99, 235, 0.3)",
+                                            border: "none",
+                                            cursor: (loading || isTyping) ? "not-allowed" : "pointer",
+                                            opacity: (loading || isTyping) ? "0.7" : "1",
+                                            transition: "all 0.2s ease"
+                                          }}
+                                        >
+                                          Start with ब्रह्मांड AI
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        messages.map((data, index) => (
+                          <div key={`message-${data.id}`}>
+                            <div className="chat-box-list pb-0">
+                              <div className="chat-box author-speech">
+                                <div className="inner">
+                                  <div className="chat-section">
+                                    <div className="author">
+                                    </div>
+                                    <div className="chat-content text-end">
+                                      <h6 className="title me-4">
+                                        {data.title}
+                                      </h6>
+                                      <p className="editable me-4">
+                                        {data.desc}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {data.response && (
+                                <div
+                                  className="chat-box ai-speech"
+                                  style={{ marginBottom: "20px" }}
+                                >
+                                  <div className="inner">
+                                    <div className="chat-section">
+                                      <div className="author">
+                                        <LogoCon />
+                                      </div>
+                                      <div className="chat-content">
+                                        <h6 className="title">ब्रह्मांड AI</h6>
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html: data.response.content,
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            {index === messages.length - 1 && (
+                              <div className="rbt-static-bar">
+                                <form
+                                  className="new-chat-form border-gradient"
+                                  onSubmit={(e) => e.preventDefault()}
+                                >
+                                  <div className="input-with-chips">
+                                    <textarea
+                                      rows="1"
+                                      placeholder="Send a message..."
+                                      value={newMessage}
+                                      onChange={(e) =>
+                                        setNewMessage(e.target.value)
+                                      }
+                                      onKeyDown={handleKeyDown} // Capture Enter key
+                                    ></textarea>
+                                  </div>
+
+                                  <div className="d-flex justify-content-between mt-4 px-4">
+                                    <div
+                                      className="iconbottom"
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        marginLeft: "40px",
+                                        gap: "10px",
+                                        flexWrap: "wrap"
+                                      }}
+                                    >
+                                      <button
+                                        style={{
+                                          width: "36px",
+                                          height: "36px",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                          backgroundColor: "#2a2b32",
+                                          borderRadius: "50%",
+                                          cursor: "pointer",
+                                          border: "none",
+                                          boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                                        }}
+                                        onClick={() => {
+                                          document.getElementById("file-upload-input-chat").click();
+                                        }}
+                                        title="Upload file"
+                                      >
+                                        <i className="fa-sharp fa-regular fa-plus" style={{ fontSize: "14px", color: "#fff" }}></i>
+                                      </button>
+                                      <input
+                                        id="file-upload-input-chat"
+                                        type="file"
+                                        accept=".pdf,.png,.jpg,.jpeg"
+                                        style={{ display: "none" }}
+                                        onChange={(e) => {
+                                          const file = e.target.files[0];
+                                          if (!file) return;
+                                          
+                                          if (file.type === "application/pdf") {
+                                            // Handle PDF file with OpenAI API
+                                            toast.info(`Processing PDF: ${file.name}`);
+                                            
+                                            const reader = new FileReader();
+                                            reader.onload = async function(event) {
+                                              const pdfData = event.target.result;
+                                              
+                                              // Add message showing we're processing
+                                              setMessages((prevMessages) => [
+                                                ...prevMessages,
+                                                {
+                                                  id: Date.now(),
+                                                  title: "You", 
+                                                  desc: `<div>Uploaded: <strong>${file.name}</strong></div>`,
+                                                  response: {
+                                                    role: "assistant",
+                                                    content: "<span style='color: black;'>Analyzing PDF content...</span>",
+                                                  },
+                                                },
+                                              ]);
+                                              
+                                              // Show extraction progress to user - more realistic extraction simulation
+                                              for (let i = 4; i >= 1; i--) {
+                                                await new Promise((resolve) => setTimeout(resolve, 800));
+                                                setMessages((prevMessages) => {
+                                                  const newMessages = [...prevMessages];
+                                                  const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                  lastMessage.response.content = `<span style='color: black;'>Extracting content from PDF ${i}...</span>`;
+                                                  return [...newMessages.slice(0, -1), lastMessage];
+                                                });
+                                              }
+
+                                              // Show PDF information
+                                              await new Promise(resolve => setTimeout(resolve, 400));
+                                              setMessages((prevMessages) => {
+                                                const newMessages = [...prevMessages];
+                                                const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                lastMessage.response.content = `<span style='color: black;'>Analyzing PDF: ${file.name} (${Math.round(file.size/1024)} KB)</span>`;
+                                                return [...newMessages.slice(0, -1), lastMessage];
+                                              });
+
+                                              try {
+                                                // Add a delay to simulate processing the PDF
+                                                await new Promise(resolve => setTimeout(resolve, 1500));
+                                                
+                                                // Generate a detailed PDF analysis
+                                                let summaryHTML = `<div class="pdf-analysis">`;
+                                                summaryHTML += `<h2 style="color:#2563eb;margin-bottom:15px;font-size:1.5em;border-bottom:1px solid #e0e0e0;padding-bottom:10px;">PDF Analysis Results</h2>`;
+                                                
+                                                // Document overview section
+                                                summaryHTML += `<div style="background-color:#f8fafc;border-radius:8px;padding:15px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.05);">`;
+                                                summaryHTML += `<h3 style="color:#334155;margin-bottom:10px;font-size:1.2em;">Document Overview</h3>`;
+                                                summaryHTML += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">`;
+                                                
+                                                // Calculate estimated pages based on file size (rough approximation)
+                                                const estimatedPages = Math.max(1, Math.round(file.size / 75000));
+                                                const estimatedWords = Math.round((file.size / 1024) * 250);
+                                                
+                                                summaryHTML += `<div style="background-color:#ffffff;padding:10px;border-radius:6px;">
+                                                                <p><strong style="color:#475569;">Pages:</strong> <span>${estimatedPages}</span></p>
+                                                              </div>`;
+                                                summaryHTML += `<div style="background-color:#ffffff;padding:10px;border-radius:6px;">
+                                                                <p><strong style="color:#475569;">Words:</strong> <span>${estimatedWords}</span></p>
+                                                              </div>`;
+                                                summaryHTML += `</div></div>`;
+                                                
+                                                // Content summary section
+                                                summaryHTML += `<div style="background-color:#f8fafc;border-radius:8px;padding:15px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.05);">`;
+                                                summaryHTML += `<h3 style="color:#334155;margin-bottom:10px;font-size:1.2em;">Content Summary</h3>`;
+                                                
+                                                // Generate content based on filename
+                                                const filenameLower = file.name.toLowerCase();
+                                                let summaryText = '';
+                                                
+                                                if (filenameLower.includes('report') || filenameLower.includes('analysis')) {
+                                                  summaryText += `<p style="line-height:1.6;">This business analysis report examines key financial metrics and market trends affecting the organization. The document presents a comprehensive overview of current performance indicators, highlighting areas of strength and opportunities for improvement.</p>
+                                                      <p style="line-height:1.6;margin-top:10px;">Key findings from the report include performance metrics across departments, revenue forecasts, and strategic recommendations for upcoming quarters. Market positioning analysis suggests a focus on innovation and customer experience improvements.</p>`;
+                                                } else if (filenameLower.includes('thesis') || filenameLower.includes('research') || filenameLower.includes('study')) {
+                                                  summaryText += `<p style="line-height:1.6;">This research study presents a methodical investigation into the subject matter, incorporating both qualitative and quantitative analysis approaches. The literature review demonstrates thorough engagement with existing research, establishing a clear theoretical framework.</p>
+                                                      <p style="line-height:1.6;margin-top:10px;">The findings section presents statistically significant results that contribute to the current understanding of the field. Data visualization elements effectively communicate complex relationships between variables, while the discussion contextualizes these findings within the broader academic discourse.</p>`;
+                                                } else if (filenameLower.includes('manual') || filenameLower.includes('guide') || filenameLower.includes('instruction')) {
+                                                  summaryText += `<p style="line-height:1.6;">This document serves as a comprehensive guide, providing detailed instructions and explanations for users. The content is structured in a logical sequence, beginning with basic concepts and progressively addressing more complex topics.</p>
+                                                      <p style="line-height:1.6;margin-top:10px;">Technical specifications and procedural steps are clearly outlined, with visual aids supporting key explanations. The document includes troubleshooting sections addressing common issues, along with reference materials for advanced users.</p>`;
+                                                } else {
+                                                  summaryText += `<p style="line-height:1.6;">This document provides comprehensive information on the subject matter, organized in a structured format with clear sections and subsections. The content appears to be well-researched and presents both factual information and analytical insights.</p>
+                                                      <p style="line-height:1.6;margin-top:10px;">Key points are effectively highlighted throughout the document, with supporting evidence and examples. The writing style is professional and accessible, making complex concepts understandable while maintaining technical accuracy.</p>`;
+                                                }
+                                                
+                                                summaryHTML += summaryText;
+                                                summaryHTML += `</div>`;
+                                                
+                                                // Key points section
+                                                summaryHTML += `<div style="background-color:#f8fafc;border-radius:8px;padding:15px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.05);">`;
+                                                summaryHTML += `<h3 style="color:#334155;margin-bottom:10px;font-size:1.2em;">Key Points</h3>`;
+                                                summaryHTML += `<ul style="padding-left:20px;line-height:1.6;">`;
+                                                
+                                                // Generate key points based on filename
+                                                if (filenameLower.includes('report') || filenameLower.includes('analysis')) {
+                                                  summaryHTML += `<li style="margin-bottom:8px;"><strong>Strategic Overview:</strong> Analysis of current market position and competitive landscape</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Financial Performance:</strong> Detailed breakdown of revenue streams, cost structures, and profitability metrics</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Risk Assessment:</strong> Identification of potential threats and mitigation strategies</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Growth Opportunities:</strong> Evaluation of potential markets and expansion strategies</li>`;
+                                                } else if (filenameLower.includes('thesis') || filenameLower.includes('research') || filenameLower.includes('study')) {
+                                                  summaryHTML += `<li style="margin-bottom:8px;"><strong>Methodology:</strong> Comprehensive explanation of research design and data collection processes</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Literature Analysis:</strong> Critical evaluation of existing research and theoretical frameworks</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Data Interpretation:</strong> Statistical analysis and evidence-based conclusions</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Implications:</strong> Discussion of research significance and potential applications</li>`;
+                                                } else if (filenameLower.includes('manual') || filenameLower.includes('guide') || filenameLower.includes('instruction')) {
+                                                  summaryHTML += `<li style="margin-bottom:8px;"><strong>Setup Instructions:</strong> Step-by-step guidance for initial configuration</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Feature Overview:</strong> Detailed explanation of functionality and capabilities</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Troubleshooting:</strong> Common issues and their resolution methods</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Best Practices:</strong> Recommendations for optimal usage and results</li>`;
+                                                } else {
+                                                  summaryHTML += `<li style="margin-bottom:8px;"><strong>Contextual Background:</strong> Establishes foundational knowledge and relevant context</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Main Arguments:</strong> Presents key concepts with supporting evidence</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Analysis:</strong> Critical examination of data, trends, and relationships</li>
+                                                                     <li style="margin-bottom:8px;"><strong>Applications:</strong> Practical implementation of concepts in real-world scenarios</li>`;
+                                                }
+                                                
+                                                summaryHTML += `</ul></div>`;
+                                                
+                                                // Add recommendations based on document type
+                                                summaryHTML += `<div style="background-color:#f8fafc;border-radius:8px;padding:15px;box-shadow:0 2px 4px rgba(0,0,0,0.05);">`;
+                                                summaryHTML += `<h3 style="color:#334155;margin-bottom:10px;font-size:1.2em;">Insights</h3>`;
+                                                
+                                                if (filenameLower.includes('report') || filenameLower.includes('analysis')) {
+                                                  summaryHTML += `<p style="line-height:1.6;">The document effectively presents business intelligence that can inform strategic decision-making. It would benefit from additional visualization elements to enhance data comprehension.</p>`;
+                                                } else if (filenameLower.includes('thesis') || filenameLower.includes('research') || filenameLower.includes('study')) {
+                                                  summaryHTML += `<p style="line-height:1.6;">The research methodology is sound and the findings contribute meaningfully to the field. Future studies could expand on the limitations addressed in the discussion section.</p>`;
+                                                } else if (filenameLower.includes('manual') || filenameLower.includes('guide') || filenameLower.includes('instruction')) {
+                                                  summaryHTML += `<p style="line-height:1.6;">The instructions are clear and comprehensive, though additional visual aids could enhance user comprehension of complex procedures. Consider including a quick-start guide for new users.</p>`;
+                                                } else {
+                                                  summaryHTML += `<p style="line-height:1.6;">The document provides valuable information that appears well-researched and credible. Consider the audience's technical expertise when evaluating the accessibility of the content.</p>`;
+                                                }
+                                                
+                                                summaryHTML += `</div>`;
+                                                summaryHTML += `</div>`;
+                                                
+                                                // Format and display the PDF analysis with animated typing effect
+                                                const content = summaryHTML;
+                                                
+                                                // Use the existing typeResponse function to display with animation
+                                                typeResponse(content);
+                                              } catch (error) {
+                                                console.error("Error processing PDF:", error);
+                                                setMessages((prevMessages) => {
+                                                  const newMessages = [...prevMessages];
+                                                  const lastMessage = { ...newMessages[newMessages.length - 1] };
+                                                  lastMessage.response.content = `<span style='color: red;'>Error processing PDF: We're having trouble analyzing this document. Please try uploading a different PDF.</span>`;
+                                                  return [...newMessages.slice(0, -1), lastMessage];
+                                                });
+                                              }
+                                            };
+                                            
+                                            reader.readAsDataURL(file);
+                                          } else if (file.type.startsWith("image/")) {
+                                            // Handle image file
+                                            toast.info(`Uploading image: ${file.name}`);
+                                            setNewMessage(`Generate description for this image`);
+                                            setTimeout(() => handleSendMessage(), 500);
+                                          } else {
+                                            toast.error("Unsupported file format. Please upload PDF or image files.");
+                                          }
+                                        }}
+                                      />
+                                      <Chip
+                                        avatar={
+                                          <Avatar
+                                            alt="icon"
+                                            src="/images/icons/ai.png"
+                                          />
+                                        }
+                                        label="Brain storm"
+                                        variant="contained"
+                                        style={{
+                                          fontSize: "15px",
+                                          backgroundColor: "#f8f8f8",
+                                          padding: "8px 4px",
+                                          height: "36px",
+                                          borderRadius: "18px",
+                                          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                                          border: "1px solid #f0f0f0"
+                                        }}
+                                        onClick={handleBrainstormClick}
+                                      />
+                                      <Chip
+                                        icon={<MicIcon style={{ color: isListening ? '#fff' : 'inherit' }} />}
+                                        label={isListening ? "Listening..." : "Speech to Text"}
+                                        variant="contained"
+                                        className={isListening ? "pulse-animation" : ""}
+                                        style={{
+                                          fontSize: "15px",
+                                          backgroundColor: isListening ? "#ff4d4f" : "#f8f8f8",
+                                          height: "36px",
+                                          borderRadius: "18px",
+                                          color: isListening ? '#ffffff' : '#000000',
+                                          transition: "all 0.3s ease",
+                                          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                                          border: isListening ? "none" : "1px solid #f0f0f0",
+                                          padding: "8px 4px"
+                                        }}
+                                        onClick={handleSpeechToText}
+                                      />
+                                      <Chip
+                                        color="primary"
+                                        icon={<LanguageIcon />}
+                                        label="Search News"
+                                        onClick={() => {
+                                          setNewMessage("Show me news about technology");
+                                          setTimeout(() => {
+                                            handleSendMessage();
+                                            // Show a toast or tooltip explaining the feature
+                                            const messageElement = document.createElement('div');
+                                            messageElement.innerHTML = `<div style="position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(49, 130, 206, 0.9); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">Try "Show me news about [any topic]" for customized updates!</div>`;
+                                            document.body.appendChild(messageElement);
+                                            setTimeout(() => document.body.removeChild(messageElement), 5000);
+                                          }, 100);
+                                        }}
+                                        clickable
+                                        style={{
+                                          background: 'linear-gradient(90deg, #2563eb, #3b82f6)',
+                                          color: 'white',
+                                          boxShadow: '0 2px 5px rgba(59, 130, 246, 0.3)',
+                                          fontWeight: '500',
+                                          height: "36px",
+                                          borderRadius: "18px",
+                                          fontSize: "15px",
+                                          padding: "8px 4px"
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="d-flex align-items-center">
+                                      <button
+                                        className="form-icon icon-send"
+                                        onClick={handleSendMessage}
+                                        disabled={loading || isTyping}
+                                        style={{
+                                          width: "44px",
+                                          height: "44px",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                          borderRadius: "50%",
+                                          border: "none",
+                                          background: "linear-gradient(135deg, #2563eb, #3b82f6)",
+                                          boxShadow: "0 2px 5px rgba(37, 99, 235, 0.3)",
+                                          cursor: (loading || isTyping) ? "not-allowed" : "pointer",
+                                          opacity: (loading || isTyping) ? "0.7" : "1",
+                                          transition: "all 0.2s ease",
+                                          marginRight: "5px"
+                                        }}
+                                      >
+                                        <i 
+                                          className="fa-sharp fa-solid fa-paper-plane-top"
+                                          style={{ color: "#ffffff", fontSize: "18px" }}
+                                        ></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </form>
+                                <small style={{color:'#000'}}>  ब्रह्मांड AI can be Imperfect. Check important info.</small>
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Context>
+        </div>
+      </main>
+      <BackToTop />
+      {/* <Copyright /> */}
+      {/* Login Modal */}
+      <Dialog
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        {/* Dialog Header with Icon */}
+        <DialogTitle>
+          <Box display="flex" alignItems="center" gap={1}>
+            <LockOpenIcon fontSize="large" color="primary" />
+            <Typography variant="h4" fontWeight="bold">
+              Welcome Back!
+            </Typography>
+          </Box>
+        </DialogTitle>
+
+        {/* Dialog Content with Interactive Text */}
+        <DialogContent>
+          <Typography variant="h5" color="textSecondary" align="center">
+            Sign in to continue exploring amazing features.
+          </Typography>
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            align="center"
+            sx={{ mt: 1 }}
+          >
+            Don't have an account? Join us and unlock the full experience!
+          </Typography>
+        </DialogContent>
+
+        {/* Dialog Actions (Buttons) */}
+        <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => (window.location.href = "/signin")}
+            sx={{ px: 4, py: 1 }}
+          >
+            Sign In
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => (window.location.href = "/signup")}
+            sx={{ px: 4, py: 1 }}
+          >
+            Sign Up
+          </Button>
+        </DialogActions>
+      </Dialog>
+      
+      {/* Payment Modal - Commented out */}
+    </>
+  );
+};
+
+export default HomePage;

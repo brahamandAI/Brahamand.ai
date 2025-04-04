@@ -1,0 +1,242 @@
+{
+  "pricing": [
+    {
+      "priceId": "nav-home",
+      "priceType": "Monthly",
+      "discount": "",
+      "isSelect": false,
+      "priceBody": [
+        {
+          "id": 1,
+          "priceId": "nav-home",
+          "isSelect": false,
+          "isShow": false,
+          "classNum": "one",
+          "subTitle": "Basic",
+          "title": "For large teams & corportaions",
+          "price": "Free",
+          "priceFor": "/Per Month",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-regular fa-circle-radiation",
+          "listItem": [
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "priceId": "nav-home",
+          "isSelect": true,
+          "isShow": true,
+          "classNum": "two",
+          "subTitle": "Premium",
+          "title": "For large teams & corportaions",
+          "price": "$60.50",
+          "priceFor": "/Per Month",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-sharp fa-regular fa-flower",
+          "listItem": [
+            {
+              "text": "12,700 7-9 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "priceId": "nav-home",
+          "isSelect": false,
+          "isShow": true,
+          "classNum": "three",
+          "subTitle": "Enterprise",
+          "title": "For large teams & corportaions",
+          "price": "$80.50",
+          "priceFor": "/Per Month",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-sharp fa-regular fa-waveform-lines",
+          "listItem": [
+            {
+              "text": "12,700 7-9 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "priceId": "nav-profile",
+      "priceType": "Yearly",
+      "discount": 10,
+      "isSelect": true,
+      "priceBody": [
+        {
+          "id": 1,
+          "priceId": "nav-profile",
+          "isSelect": false,
+          "isShow": false,
+          "classNum": "one",
+          "subTitle": "Basic",
+          "title": "For large teams & corportaions",
+          "price": "Free",
+          "priceFor": "/Per Year",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-regular fa-circle-radiation",
+          "listItem": [
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "priceId": "nav-profile",
+          "isSelect": true,
+          "isShow": true,
+          "classNum": "two",
+          "subTitle": "Premium",
+          "title": "For large teams & corportaions",
+          "price": "$499.00",
+          "priceFor": "/Per Year",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-sharp fa-regular fa-flower",
+          "listItem": [
+            {
+              "text": "12,700 7-9 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "priceId": "nav-profile",
+          "isSelect": false,
+          "isShow": true,
+          "classNum": "three",
+          "subTitle": "Enterprise",
+          "title": "For large teams & corportaions",
+          "price": "$599.00",
+          "priceFor": "/Per Year",
+          "limited": "Limited Offer",
+          "text": "Features",
+          "iconClass": "fa-sharp fa-regular fa-waveform-lines",
+          "listItem": [
+            {
+              "text": "12,700 7-9 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "7,700 3-5 day turnarouord"
+            },
+            {
+              "text": "6+ Naive development"
+            },
+            {
+              "text": "5+ Task delivered one-by-one"
+            },
+            {
+              "text": "AI Blog Updates via dashboard & slack"
+            },
+            {
+              "text": "Advance Updates via dashboard & slack"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
