@@ -1,0 +1,67 @@
+{
+  "footer": [
+    {
+      "links": [
+        {
+          "title": "Qucik Links",
+          "innerItem": [
+            {
+              "link": "#",
+              "text": "Pages"
+            },
+            {
+              "link": "/blog",
+              "text": "Blog"
+            },
+            {
+              "link": "/contact",
+              "text": "Contact"
+            },
+            {
+              "link": "/utilize",
+              "text": "How to use"
+            },
+            {
+              "link": "/roadmap",
+              "text": "Roadmap"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "title": "Services",
+          "innerItem": [
+            {
+              "link": "/image-generator",
+              "text": "Image Generator"
+            },
+            {
+              "link": "/vedio-generator",
+              "text": "Video Generator"
+            },
+            {
+              "link": "/",
+              "text": "ब्रह्मांड AI Assistant"
+            },
+            {
+              "link": "/code-generator",
+              "text": "Code Generator"
+            },
+            {
+              "link": "#",
+              "text": "Education Feedback"
+            }
+          ]
+        }
+      ],
+      "contact": [
+        {
+          "location": "8819 Ohio St. South Gate, North America, USA",
+          "mail": "example@domain.com",
+          "number": "1 386-688-3295"
+        }
+      ]
+    }
+  ]
+}

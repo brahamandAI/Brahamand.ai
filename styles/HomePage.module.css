@@ -1,0 +1,164 @@
+.welcomeScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeTitle {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.chatInputForm {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+.inputWithChips {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.chatTextarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  resize: none;
+  font-size: 1rem;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 1rem;
+}
+
+.chatTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.standardChip {
+  background-color: #f8f8f8 !important;
+  border: 1px solid #f0f0f0 !important;
+  padding: 0 15px !important;
+  height: 36px !important;
+  font-size: 14px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.standardChip:hover {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.gradientChip {
+  background: white !important;
+  color: black !important;
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.gradientChip:hover {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.pulseAnimation {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 77, 79, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
+  }
+}
+
+.uploadButton {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2b32;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.uploadButton:hover {
+  background-color: #3b82f6;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.uploadIcon {
+  font-size: 14px;
+  color: #fff;
+}
+
+.disclaimer {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcomeTitle {
+    font-size: 2rem;
+  }
+  
+  .chipContainer {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeTitle {
+    font-size: 1.8rem;
+  }
+  
+  .standardChip {
+    padding: 0 10px !important;
+    font-size: 12px !important;
+  }
+} 

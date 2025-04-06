@@ -1,0 +1,124 @@
+{
+  "utilize": [
+    {
+      "id": "getstarted_two",
+      "title": "Getting started",
+      "body": [
+        {
+          "id": "text-generator-sec",
+          "title": "Connect with AI text generator",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-01.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        },
+        {
+          "id": "pernalized-sec",
+          "title": "Get Personalized advices",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-02.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        },
+        {
+          "id": "engage-sec",
+          "title": "Explore and engage",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-03.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pricing_two",
+      "title": "Getting started",
+      "body": [
+        {
+          "id": "example1",
+          "title": "Connect with AI text generator",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-01.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        },
+        {
+          "id": "example2",
+          "title": "Connect with AI text generator",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-02.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        },
+        {
+          "id": "example3",
+          "title": "Connect with AI text generator",
+          "subTitle": "Deep Learning and Transformers",
+          "img": "/images/utilize-img/ut-image-03.png",
+          "desc": "All you have to do to register for an account on Rainbow - AI chat app is provide your name, email address, and password. You can begin examining the app's features as soon as you've registered. Chatting with friends, family, and even new acquaintances is made simple with the Rainbow",
+          "list": [
+            {
+              "text": "Around 2013, the use of deep learning, especially transformer architectures, revolutionized NLP."
+            },
+            {
+              "text": "Transformer models, like OpenAI's GPT (Generative Pre-trained Transformer) series, became"
+            },
+            {
+              "text": "AI text generators, including GPT-3, have found applications in chatbots, content creation"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

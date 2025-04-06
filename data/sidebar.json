@@ -1,0 +1,61 @@
+{
+  "sidebar": [
+    {
+      "id": "getstarted",
+      "text": "Getting started",
+      "isShow": true,
+      "list": [
+        {
+          "id": "text-generator-sec",
+          "text": "ब्रह्मांड AI Assistant"
+        },
+        {
+          "id": "pernalized-sec",
+          "text": "Get Personalized advices"
+        },
+        {
+          "id": "engage-sec",
+          "text": "Explore and engage"
+        }
+      ]
+    },
+    {
+      "id": "pricing",
+      "text": "Getting started",
+      "isShow": false,
+      "list": [
+        {
+          "id": "example1",
+          "text": "ब्रह्मांड AI Assistant"
+        },
+        {
+          "id": "example2",
+          "text": "Get Personalized advices"
+        },
+        {
+          "id": "example3",
+          "text": "Get Personalized advices"
+        }
+      ]
+    },
+    {
+      "id": "corefeature",
+      "text": "Core Feature's",
+      "isShow": false,
+      "list": [
+        {
+          "id": "#",
+          "text": "ब्रह्मांड AI Assistant"
+        },
+        {
+          "id": "#",
+          "text": "Get Personalized advices"
+        },
+        {
+          "id": "#",
+          "text": "Get Personalized advices"
+        }
+      ]
+    }
+  ]
+}

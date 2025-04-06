@@ -1,0 +1,172 @@
+{
+  "blog": [
+    {
+      "id": 1,
+      "img": "/images/blog/blog-01.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "10 Dec 2024",
+      "cate": "Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 2,
+      "img": "/images/blog/blog-02.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "30 Nov 2024",
+      "cate": "Development",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 3,
+      "img": "/images/blog/blog-03.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "10 Oct 2024",
+      "cate": "AI Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 4,
+      "img": "/images/blog/blog-04.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "25 Aug 2024",
+      "cate": "Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 5,
+      "img": "/images/blog/blog-05.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "25 Jun 2024",
+      "cate": "Development",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 6,
+      "img": "/images/blog/blog-06.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "22 Nov 2024",
+      "cate": "Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 7,
+      "img": "/images/blog/blog-07.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "10 May 2024",
+      "cate": "AI Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 8,
+      "img": "/images/blog/blog-08.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "22 Sept 2024",
+      "cate": "Development",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    },
+    {
+      "id": 9,
+      "img": "/images/blog/blog-09.png",
+      "blogImg": "/images/blog/blog-detailes-01.png",
+      "blogImg2": "/images/blog/blog-detailes-02.png",
+      "date": "10 Dec 2024",
+      "cate": "AI Technology",
+      "title": "Best Corporate Tips You Will Read This Year.",
+      "desc": "Implement user authentication to provide personalized experiences"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Development",
+      "num": 3
+    },
+    {
+      "name": "Company",
+      "num": 5
+    },
+    {
+      "name": "Marketing",
+      "num": 2
+    },
+    {
+      "name": "UX Design",
+      "num": 6
+    },
+    {
+      "name": "Business",
+      "num": 2
+    },
+    {
+      "name": "App Development",
+      "num": 6
+    },
+    {
+      "name": "Application",
+      "num": 3
+    },
+    {
+      "name": "Art",
+      "num": 3
+    }
+  ],
+  "tags": [
+    {
+      "name": "Corporate"
+    },
+    {
+      "name": "Agency"
+    },
+    {
+      "name": "Creative"
+    },
+    {
+      "name": "Design"
+    },
+    {
+      "name": "Minimal"
+    },
+    {
+      "name": "Company"
+    },
+    {
+      "name": "Development"
+    },
+    {
+      "name": "App Landing"
+    },
+    {
+      "name": "Startup"
+    },
+    {
+      "name": "App"
+    },
+    {
+      "name": "Business"
+    },
+    {
+      "name": "Software"
+    },
+    {
+      "name": "Landing"
+    },
+    {
+      "name": "Art"
+    }
+  ]
+}

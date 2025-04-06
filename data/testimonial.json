@@ -1,0 +1,73 @@
+{
+  "testimonial": [
+    {
+      "isActive": true,
+      "isBorder": true,
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    },
+    {
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    },
+    {
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    },
+    {
+      "isActive": true,
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    },
+    {
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    },
+    {
+      "desc": "Rainbow-Themes has become such an integral part of our work! By putting our",
+      "name": "Guy Hawkins",
+      "post": "Nursing Assistant",
+      "userImg": "/images/team/team-02sm.jpg",
+      "brandImg": "/images/brand/brand-t.png",
+      "img": "/images/service/bg-testimonial.png",
+      "imgHover": "/images/service/bg-testimonial-hover.png",
+      "lightImg": "/images/light/service/bg-testimonial.png",
+      "lightImgHover": "/images/light/service/bg-testimonial-hover.png"
+    }
+  ]
+}

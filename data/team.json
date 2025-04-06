@@ -1,0 +1,58 @@
+{
+  "team": [
+    {
+      "img": "/images/team/team-07.png",
+      "name": "RainbowIT",
+      "profission": "Frontend Developer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-08.png",
+      "name": "Christopher",
+      "profission": "UI/UX Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-09.png",
+      "name": "Robert Song",
+      "profission": "UI/UX Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-01.png",
+      "name": "William Susan",
+      "profission": "Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-02.png",
+      "name": "Soseph Sara",
+      "profission": "Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-03.png",
+      "name": "RainbowIT",
+      "profission": "Frontend Developer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-04.png",
+      "name": "Irma J. Erwin",
+      "profission": "Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-05.png",
+      "name": "John Due",
+      "profission": "Designer",
+      "location": "CO Miego, AD,USA"
+    },
+    {
+      "img": "/images/team/team-06.png",
+      "name": "Joo Bieden",
+      "profission": "Designer",
+      "location": "CO Miego, AD,USA"
+    }
+  ]
+}
